@@ -1,0 +1,29 @@
+{
+  "name": "social-agents-reddit-poster",
+  "version": "1.0.0",
+  "description": "Reddit posting agent using Claude Code headless mode with reddit-poster subagent",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "practical": "tsx practical-example.ts",
+    "lint": "eslint src/**/*.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": ["reddit", "social-media", "claude-code", "headless", "subagent", "automation"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0"
+  }
+}
