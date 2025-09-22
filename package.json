@@ -1,7 +1,7 @@
 {
-  "name": "social-agents-reddit-poster",
+  "name": "social-agents",
   "version": "1.0.0",
-  "description": "Reddit posting agent using Claude Code headless mode with reddit-poster subagent",
+  "description": "Social media posting agents using Claude Code headless mode with specialized subagents for Reddit and Twitter",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -10,13 +10,39 @@
     "dev": "tsx src/index.ts",
     "practical": "tsx practical-example.ts",
     "lint": "eslint src/**/*.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "reddit:example": "tsx src/subagent-example.ts",
+    "reddit:headless": "./headless-examples.sh",
+    "reddit:simple": "./headless-examples.sh simple",
+    "reddit:multi": "./headless-examples.sh multi",
+    "reddit:optimize": "./headless-examples.sh optimize",
+    "twitter:example": "tsx twitter-practical-example.ts",
+    "twitter:headless": "./twitter-headless-examples.sh",
+    "twitter:simple": "./twitter-headless-examples.sh simple",
+    "twitter:thread": "./twitter-headless-examples.sh thread",
+    "twitter:optimize": "./twitter-headless-examples.sh optimize",
+    "twitter:trends": "./twitter-headless-examples.sh trends",
+    "twitter:multi": "./twitter-headless-examples.sh multi",
+    "twitter:community": "./twitter-headless-examples.sh community",
+    "mcp:setup": "node scripts/setup-mcp.js",
+    "mcp:install": "npm install @composio/rube-mcp-server @context7/mcp-server",
+    "mcp:test": "node scripts/test-mcp-connection.js",
+    "mcp:start": "npx @composio/rube-mcp-server",
+    "mcp:config": "node scripts/configure-mcp.js",
+    "direct:reddit": "tsx examples/direct-mcp-reddit.ts",
+    "direct:twitter": "tsx examples/direct-mcp-twitter.ts",
+    "direct:bulk": "tsx examples/direct-mcp-bulk-operations.ts",
+    "direct:analytics": "tsx examples/direct-mcp-analytics.ts"
   },
-  "keywords": ["reddit", "social-media", "claude-code", "headless", "subagent", "automation"],
+  "keywords": ["reddit", "twitter", "social-media", "claude-code", "headless", "subagent", "automation", "ai-agents", "viral-content", "engagement"],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "zod": "^3.22.0"
+    "zod": "^3.22.0",
+    "@composio/rube-mcp-server": "^1.0.0",
+    "@context7/mcp-server": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
