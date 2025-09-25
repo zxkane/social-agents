@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "http-service": {
+      "type": "http",
+      "url": "https://rube.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${RUBE_API_TOKEN}"
+      }
+    }
+  }
+}
