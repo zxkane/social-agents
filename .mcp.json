@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "http-service": {
+    "rube": {
       "type": "http",
       "url": "https://rube.app/mcp",
       "headers": {

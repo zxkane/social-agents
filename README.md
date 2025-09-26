@@ -1,24 +1,26 @@
-# Social Media Agents - AI-Driven Twitter Operations
+# Social Media Agents - Multi-Platform AI Automation
 
-A TypeScript-based social media automation system featuring a **unified Twitter command** with natural language interface and direct MCP integration. The system uses Claude Code SDK with system prompts to provide intelligent, model-driven workflows for Twitter content generation and engagement.
+A TypeScript-based social media automation system featuring **multi-platform social commands** with Claude Code slash commands and natural language interface. The system uses Claude Code SDK with platform-specific slash commands for AI-driven operations across Twitter, Reddit, and LinkedIn.
 
 ## Features
 
-### 🐦 Unified Twitter Command
-- **Natural Language Interface**: Express complex operations in plain English
-- **Intelligent Intent Detection**: AI automatically determines whether you want generation or engagement
-- **Content Generation**: Create viral tweets, threads, and optimized content
-- **Smart Engagement**: Search, analyze, and engage with Twitter content strategically
-- **Mixed Operations**: Combine research, content creation, and engagement in single commands
+### 🌐 Multi-Platform Social Commands
+- **Natural Language Interface**: Express complex operations in plain English across all platforms
+- **Intelligent Intent Detection**: AI automatically determines appropriate actions for each platform
+- **Twitter Operations**: Viral content, threads, engagement, and trend analysis
+- **Reddit Operations**: Community posting, subreddit engagement, and discussion participation
+- **LinkedIn Operations**: Professional networking, thought leadership, and B2B content
+- **Cross-Platform Strategy**: Unified approach with platform-specific optimization
 
 ### 🧠 AI-Driven Operations
-- **System Prompt Architecture**: Uses Claude Code SDK with specialized Twitter expertise
+- **Slash Command Architecture**: Uses Claude Code SDK with platform-specific system prompts
 - **Model-Driven Workflows**: No predetermined limitations - AI controls the execution flow
-- **Real-time Adaptation**: Responds intelligently to API responses and platform changes
+- **Platform-Aware Intelligence**: Adapts content and strategies to each platform's unique culture
 - **Strategic Guidance**: Provides valuable insights even without direct tool access
 
 ### 🔧 Technical Excellence
-- **Direct MCP Integration**: Connects to RUBE MCP server for 500+ app access
+- **RUBE MCP Integration**: Connects to RUBE MCP server for 500+ app access
+- **Platform-Specific Commands**: Customizable slash commands in `.claude/commands/` directory
 - **Streaming Response Processing**: Real-time feedback and progress tracking
 - **Permission Management**: Graceful handling of MCP tool permissions
 - **Environment Priority**: `.env.local` takes precedence over system variables
@@ -33,42 +35,44 @@ A TypeScript-based social media automation system featuring a **unified Twitter 
 
 ## Architecture
 
-The system uses **direct MCP integration** with natural language processing for intelligent Twitter operations:
+The system uses **Claude Code slash commands** with natural language processing for intelligent multi-platform operations:
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Natural        │───▶│ Claude Code SDK │───▶│   Direct MCP    │
-│  Language       │    │ Integration     │    │   Integration   │
+│  Multi-Platform │───▶│ Claude Code SDK │───▶│   RUBE MCP      │
+│  Commands       │    │ Integration     │    │   Integration   │
 │                 │    │                 │    │                 │
-│  - User Intent  │    │ - System Prompts│    │ RUBE MCP:       │
-│  - AI Analysis  │    │ - Streaming     │    │ - Twitter API   │
-│  - Command Args │    │ - Permission    │    │ - 500+ Apps     │
-│  - Type Safety  │    │   Handling      │    │ - Rate Limiting │
-│                 │    │                 │    │                 │
-│  twitter.ts     │    │ TwitterSDK      │    │ Real-time       │
-│  (124 lines)    │    │ Executor        │    │ Operations      │
+│  - twitter.ts   │    │ - Slash Commands│    │ RUBE MCP:       │
+│  - reddit.ts    │    │ - Streaming     │    │ - Twitter API   │
+│  - linkedin.ts  │    │ - Permission    │    │ - Reddit API    │
+│  - social.ts    │    │   Handling      │    │ - LinkedIn API  │
+│                 │    │                 │    │ - 500+ Apps     │
+│  Natural Lang   │    │ SocialSDK       │    │ Real-time       │
+│  Processing     │    │ Executor        │    │ Operations      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-**Key Principle:** Natural language commands are processed by AI using direct MCP server integration with system prompts, providing intelligent intent detection and model-driven workflows without predetermined limitations.
+**Key Principle:** Natural language commands are processed by AI using Claude Code slash commands with platform-specific system prompts, providing intelligent intent detection and model-driven workflows without predetermined limitations.
 
-### Why Use the Direct MCP Approach?
+### Why Use the Slash Command Approach?
 
-✅ **AI-Driven Operations**: Natural language → Intelligent execution
-- **No Predetermined Workflows**: AI determines the best approach for each request
-- **Intent Detection**: Automatically understands whether you want generation or engagement
-- **Adaptive Intelligence**: Responds to platform changes and API responses in real-time
-- **Educational Integration**: Learn platform best practices during execution
+✅ **Multi-Platform Intelligence**: Natural language → Platform-aware execution
+- **No Predetermined Workflows**: AI determines the best approach for each platform
+- **Intent Detection**: Automatically understands generation, engagement, or research needs
+- **Platform Adaptation**: Optimizes content and strategies for each social network
+- **Educational Integration**: Learn platform-specific best practices during execution
 
-✅ **Direct MCP Integration**: Claude Code SDK + System Prompts
+✅ **Slash Command Architecture**: Claude Code SDK + Platform-Specific Prompts
+- **Customizable Prompts**: Edit `.claude/commands/*.md` files to adjust AI behavior
 - **Permission Management**: Graceful handling when tools need explicit access
 - **Streaming Feedback**: Real-time progress and transparency
 - **Fallback Intelligence**: Provides strategic guidance even without direct tool access
-- **Platform Expertise**: Built-in Twitter optimization and engagement strategies
 
 ## Installation
 
-1. **Prerequisites**: Ensure you have Claude Code CLI installed
+1. **Prerequisites**:
+   - Ensure you have Claude Code CLI installed
+   - Sign up for a RUBE account at [https://rube.app/](https://rube.app/) to get your API token
 2. **Install dependencies**:
    ```bash
    npm install
@@ -76,36 +80,44 @@ The system uses **direct MCP integration** with natural language processing for 
 3. **Configure environment**:
    ```bash
    cp .env.example .env.local
-   # Edit .env.local and add your RUBE_API_TOKEN
+   # Edit .env.local and add your RUBE_API_TOKEN from https://rube.app/
    ```
 4. **Test the setup**:
    ```bash
    npm run twitter -- --help
+   npm run reddit -- --help
+   npm run linkedin -- --help
    ```
 
 ## Quick Start
 
-### Natural Language Twitter Operations
+### Multi-Platform Social Operations
 
-Use the unified Twitter command with natural language:
+Use natural language commands across all platforms:
 
 ```bash
-# Content Generation
+# Twitter Operations
 npm run twitter -- "create a viral tweet about TypeScript best practices"
-npm run twitter -- "write a thread about serverless architecture insights"
-npm run twitter -- "generate engaging content about our product launch"
-
-# Engagement Operations
-npm run twitter -- "find recent AI discussions and like helpful posts"
-npm run twitter -- "search for AWS content and engage with valuable insights"
-npm run twitter -- "monitor TypeScript community and join interesting conversations"
-
-# Mixed Operations
+npm run twitter -- "find recent AI discussions and engage thoughtfully"
 npm run twitter -- "analyze trending topics and create relevant content"
-npm run twitter -- "research React discussions and contribute with our expertise"
+
+# Reddit Operations
+npm run reddit -- "post insights about React in r/webdev" --dry-run
+npm run reddit -- "find JavaScript discussions to join with helpful comments"
+npm run reddit -- "analyze popular programming posts for content ideas"
+
+# LinkedIn Operations
+npm run linkedin -- "share cloud architecture best practices" --dry-run
+npm run linkedin -- "connect with DevOps professionals in my industry"
+npm run linkedin -- "create thought leadership content about AI trends"
+
+# Generic Cross-Platform Commands
+npm run social -- twitter "create viral content about TypeScript" --dry-run
+npm run social -- reddit "engage in r/programming discussions" --verbose
+npm run social -- linkedin "share professional insights"
 
 # Always test first with dry-run mode
-npm run twitter -- "your request here" --dry-run --verbose
+npm run [platform] -- "your request here" --dry-run --verbose
 ```
 
 ### Example Output
@@ -113,12 +125,13 @@ npm run twitter -- "your request here" --dry-run --verbose
 When you run a generation command, you'll see:
 
 ```
-🐦 Twitter SDK Executor - AI-Driven Operations
-==================================================
+🔮 Social SDK Executor - TWITTER Operations
+=======================================================
 📝 Request: create a viral tweet about TypeScript best practices
+🎯 Platform: twitter
 🔧 Mode: DRY RUN
 
-🚀 Initializing AI-driven Twitter operations...
+🚀 Initializing AI-driven twitter operations...
 
 🤖 Assistant: I'll create viral Twitter content about TypeScript best practices!
 
@@ -173,10 +186,11 @@ Simply **grant permission when Claude Code asks** - this enables access to Twitt
 
 ### Core Components
 
-#### `TwitterSDKExecutor.execute(prompt: string, options: TwitterOptions)`
-Main execution method for Twitter operations.
+#### `SocialSDKExecutor.execute(platform: string, prompt: string, options: SocialOptions)`
+Main execution method for multi-platform social operations.
 
 **Parameters:**
+- `platform`: Target platform ('twitter', 'reddit', 'linkedin')
 - `prompt`: Natural language instruction for the operation
 - `options`: Configuration object with `dryRun` and `verbose` flags
 
@@ -184,9 +198,16 @@ Main execution method for Twitter operations.
 
 **Example:**
 ```typescript
-await TwitterSDKExecutor.execute(
+await SocialSDKExecutor.execute(
+  'twitter',
   "create viral content about TypeScript",
   { dryRun: true, verbose: true }
+);
+
+await SocialSDKExecutor.execute(
+  'linkedin',
+  "share cloud architecture best practices",
+  { dryRun: false, verbose: true }
 );
 ```
 
@@ -197,24 +218,25 @@ Loads environment configuration with `.env.local` priority.
 
 **Priority Chain:** `.env.local` → System environment variables
 
-#### `validateTwitterEnvironment(): ValidationResult`
-Validates required Twitter environment variables.
+#### `validateSocialEnvironment(): ValidationResult`
+Validates required social media environment variables.
 
 **Returns:** `{ valid: boolean, missing: string[] }`
 
 ### Command Interface
 
-The unified Twitter command accepts natural language and automatically:
+The multi-platform social commands accept natural language and automatically:
 - **Detects Intent**: Generation vs. engagement vs. mixed operations
+- **Platform Awareness**: Adapts content and strategies for each social network
 - **Processes Language**: Understands complex, multi-step instructions
 - **Manages Permissions**: Handles MCP tool access gracefully
 - **Provides Feedback**: Real-time progress and educational insights
 
 ### Type Definitions
 
-#### TwitterOptions
+#### SocialOptions
 ```typescript
-interface TwitterOptions {
+interface SocialOptions {
   dryRun: boolean;    // Preview actions without executing
   verbose: boolean;   // Show detailed execution logs
 }
@@ -228,7 +250,7 @@ RUBE_API_TOKEN=your_rube_api_token
 
 # Optional
 CLAUDE_CODE_USE_BEDROCK=1
-AWS_PROFILE=bedrock
+AWS_PROFILE=your_aws_profile_name
 MAX_THINKING_TOKENS=8192
 ```
 
@@ -237,11 +259,21 @@ MAX_THINKING_TOKENS=8192
 ```
 src/
 ├── env-loader.ts           # Environment configuration with .env.local priority
-├── twitter-sdk-executor.ts # Direct MCP integration with Claude Code SDK
+├── social-sdk-executor.ts  # Generic MCP integration with Claude Code SDK
 └── types.ts               # TypeScript type definitions and Zod schemas
 
-twitter.ts                  # Unified Twitter command interface (124 lines)
-.mcp.json                  # MCP server configuration
+twitter.ts                  # Twitter command interface
+reddit.ts                   # Reddit command interface
+linkedin.ts                 # LinkedIn command interface
+social.ts                   # Generic cross-platform interface
+
+.claude/
+└── commands/
+    ├── twitter.md          # Twitter-specific slash command prompts
+    ├── reddit.md           # Reddit-specific slash command prompts
+    └── linkedin.md         # LinkedIn-specific slash command prompts
+
+.mcp.json                  # MCP server configuration (RUBE)
 .env.example               # Environment template
 .env.local                 # User environment (gitignored)
 
@@ -261,60 +293,73 @@ npm run type-check
 # Build for production
 npm run build
 
-# Test the unified command
+# Test all platform commands
 npm run twitter -- --help
+npm run reddit -- --help
+npm run linkedin -- --help
+npm run social -- --help
+
+# Test with dry-run mode
 npm run twitter -- "test request" --dry-run --verbose
+npm run reddit -- "test request" --dry-run --verbose
+npm run linkedin -- "test request" --dry-run --verbose
 ```
 
 ## Migration from Subagent Architecture
 
-This project has been refactored from a subagent-delegation pattern to direct MCP integration:
+This project has been refactored from a subagent-delegation pattern to slash command integration:
 
 **Before (Subagent):**
 - Complex multi-file architecture with separate subagents
 - Required Task tool delegation and headless command generation
 - Predetermined workflows and operation types
+- Twitter-only operations
 
-**After (Direct MCP):**
-- Simple unified command with natural language interface
-- Direct Claude Code SDK integration with system prompts
+**After (Slash Commands):**
+- Multi-platform architecture with unified execution engine
+- Claude Code SDK integration with platform-specific slash commands
 - AI-driven workflows with intelligent intent detection
+- Customizable platform prompts in `.claude/commands/` directory
+- Support for Twitter, Reddit, LinkedIn, and easy platform extension
 
 **Legacy files are preserved in `_archive/` for reference.**
 
 ## Examples
 
-### Content Generation
+### Twitter Operations
 ```bash
-# Single viral tweet
+# Viral content and engagement
 npm run twitter -- "create a controversial take on AI development trends"
-
-# Educational thread
 npm run twitter -- "write a 5-tweet thread explaining async/await to beginners"
-
-# Product launch content
-npm run twitter -- "generate buzz for our new TypeScript library launch"
-```
-
-### Engagement Operations
-```bash
-# Community building
 npm run twitter -- "find developers asking TypeScript questions and provide helpful answers"
-
-# Competitive intelligence
-npm run twitter -- "monitor mentions of competing products and engage professionally"
-
-# Trend analysis
-npm run twitter -- "research what's trending in React ecosystem and create relevant content"
 ```
 
-### Mixed Workflows
+### Reddit Operations
 ```bash
-# Research → Create → Engage
-npm run twitter -- "analyze current AWS discussions, create valuable content, and engage with the community"
+# Community engagement and posting
+npm run reddit -- "post insights about React best practices in r/webdev" --dry-run
+npm run reddit -- "find JavaScript discussions in r/programming and join with helpful comments"
+npm run reddit -- "analyze popular posts in r/MachineLearning for content inspiration"
+```
 
-# Monitor → Respond → Build
-npm run twitter -- "monitor our brand mentions and respond with helpful resources to build relationships"
+### LinkedIn Operations
+```bash
+# Professional networking and thought leadership
+npm run linkedin -- "share cloud architecture insights with my professional network"
+npm run linkedin -- "connect with DevOps professionals in the enterprise space"
+npm run linkedin -- "create thought leadership content about AI trends in business"
+```
+
+### Cross-Platform Workflows
+```bash
+# Generic interface for any platform
+npm run social -- twitter "analyze trending topics and create viral content"
+npm run social -- reddit "engage in r/webdev discussions about modern frameworks"
+npm run social -- linkedin "share professional insights about cloud architecture"
+
+# Research → Create → Engage across platforms
+npm run twitter -- "research AWS trends and create engaging technical content"
+npm run linkedin -- "share the same insights in a professional B2B format"
 ```
 
 ## Contributing

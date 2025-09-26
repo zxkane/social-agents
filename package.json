@@ -1,7 +1,7 @@
 {
   "name": "social-agents",
   "version": "1.0.0",
-  "description": "Social media posting agents using Claude Code headless mode with specialized subagents for Reddit and Twitter",
+  "description": "Social media automation agents using Claude Code with AI-driven operations for Twitter, Reddit, and LinkedIn",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -20,6 +20,16 @@
     "twitter:preview": "tsx twitter.ts --dry-run",
     "twitter:verbose": "tsx twitter.ts --verbose",
 
+    "reddit": "tsx reddit.ts",
+    "reddit:preview": "tsx reddit.ts --dry-run",
+    "reddit:verbose": "tsx reddit.ts --verbose",
+
+    "linkedin": "tsx linkedin.ts",
+    "linkedin:preview": "tsx linkedin.ts --dry-run",
+    "linkedin:verbose": "tsx linkedin.ts --verbose",
+
+    "social": "tsx social.ts",
+
     "reddit:example": "tsx src/subagent-example.ts",
     "reddit:headless": "./headless-examples.sh",
     "reddit:simple": "./headless-examples.sh simple",
@@ -31,7 +41,7 @@
     "direct:bulk": "tsx examples/direct-mcp-bulk-operations.ts",
     "direct:analytics": "tsx examples/direct-mcp-analytics.ts"
   },
-  "keywords": ["reddit", "twitter", "social-media", "claude-code", "headless", "subagent", "automation", "ai-agents", "viral-content", "engagement"],
+  "keywords": ["reddit", "twitter", "linkedin", "social-media", "claude-code", "automation", "ai-agents", "viral-content", "engagement", "slash-commands", "mcp"],
   "author": "",
   "license": "MIT",
   "dependencies": {

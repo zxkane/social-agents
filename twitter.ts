@@ -1,8 +1,8 @@
 #!/usr/bin/env tsx
 
 /**
- * Unified Twitter Command - AI-Driven Operations
- * Simplified architecture with direct MCP integration and system prompts
+ * Twitter Command - AI-Driven Operations
+ * Uses generic social executor with Twitter-specific slash commands
  *
  * Examples:
  *   npx tsx twitter.ts "generate a viral thread about TypeScript best practices"
@@ -10,20 +10,20 @@
  *   npx tsx twitter.ts "analyze trending topics and create relevant content" --verbose
  */
 
-import { TwitterSDKExecutor, type TwitterOptions } from './src/twitter-sdk-executor.js';
+import { SocialSDKExecutor, type SocialOptions } from './src/social-sdk-executor.js';
 
 /**
  * ★ Insight ─────────────────────────────────────
- * Simplified command interface removes artificial type detection
- * Natural language processing lets the AI understand user intent
- * No predetermined workflows - model-driven execution
+ * Twitter-specific wrapper uses generic social executor
+ * Maintains backward compatibility while leveraging new architecture
+ * Platform-specific behavior comes from slash command files
  * ─────────────────────────────────────────────────
  */
 async function main() {
   const args = process.argv.slice(2);
 
   // Parse command line options
-  const options: TwitterOptions = {
+  const options: SocialOptions = {
     dryRun: args.includes('--dry-run') || args.includes('--preview'),
     verbose: args.includes('--verbose') || args.includes('-v')
   };
@@ -46,8 +46,8 @@ async function main() {
   }
 
   try {
-    // Execute with the new simplified architecture
-    await TwitterSDKExecutor.execute(prompt, options);
+    // Execute with the generic social executor using Twitter platform
+    await SocialSDKExecutor.execute('twitter', prompt, options);
     console.log('\n🎉 Twitter operation completed!');
   } catch (error) {
     console.error(`\n❌ Operation failed: ${(error as Error).message}`);
@@ -106,9 +106,10 @@ FEATURES:
   🎯 Viral Optimization - Strategic content creation for maximum reach
 
 SETUP:
-  1. Create .env.local with your RUBE_API_TOKEN
+  1. Create .env.local with your RUBE_API_TOKEN or COMPOSIO_API_KEY
   2. Ensure .mcp.json is configured (already done in this project)
-  3. Run your first command!
+  3. Verify .claude/commands/twitter.md exists
+  4. Run your first command!
 
 The AI will understand your intent and execute the appropriate Twitter
 operations without requiring you to specify whether you want generation,
