@@ -33,6 +33,13 @@ A TypeScript-based social media automation system featuring **multi-platform soc
 - **Fallback Strategies**: Intelligent responses when tools aren't accessible
 - **Educational Insights**: Learn platform best practices during execution
 
+### 🔄 Session Management
+- **Session Tracking**: Automatic session ID output for every conversation
+- **Resume Conversations**: Continue previous sessions using `--resume <session-id>` parameter
+- **Local Storage**: Conversations stored locally in `~/.claude/projects/` as JSONL transcripts
+- **Stateful Workflows**: Maintain context across multiple command invocations
+- **Flexible Resumption**: Add new prompts when resuming existing sessions
+
 ## Architecture
 
 The system uses **Claude Code slash commands** with natural language processing for intelligent multi-platform operations:
@@ -162,8 +169,14 @@ npm run twitter -- "your request" --dry-run
 # Verbose mode - detailed execution logs and debugging
 npm run twitter -- "your request" --verbose
 
-# Combined - dry run with verbose output
+# Resume previous session and continue with new prompt
+npm run twitter -- "new request" --resume <session-id>
+
+# Combined options - dry run with verbose output
 npm run twitter -- "your request" --dry-run --verbose
+
+# Resume with dry run and verbose logging
+npm run twitter -- "new request" --resume <session-id> --dry-run --verbose
 
 # Get help and examples
 npm run twitter -- --help
@@ -239,6 +252,7 @@ The multi-platform social commands accept natural language and automatically:
 interface SocialOptions {
   dryRun: boolean;    // Preview actions without executing
   verbose: boolean;   // Show detailed execution logs
+  resume?: string;    // Optional session ID to resume previous conversation
 }
 ```
 
@@ -360,6 +374,44 @@ npm run social -- linkedin "share professional insights about cloud architecture
 # Research → Create → Engage across platforms
 npm run twitter -- "research AWS trends and create engaging technical content"
 npm run linkedin -- "share the same insights in a professional B2B format"
+```
+
+### Session Management Workflows
+
+#### Basic Session Usage
+```bash
+# Start a new session - note the session ID in output
+npm run twitter -- "create viral content about TypeScript"
+# Output: 📌 Session ID: 77552924-a31c-4c1a-a07c-990855aa95a3
+
+# Resume the session later with new instructions
+npm run twitter -- "now create a follow-up thread" --resume 77552924-a31c-4c1a-a07c-990855aa95a3
+
+# Continue iterating on the same conversation
+npm run twitter -- "make it more technical" --resume 77552924-a31c-4c1a-a07c-990855aa95a3
+```
+
+#### Multi-Stage Content Development
+```bash
+# Stage 1: Research and planning
+npm run reddit -- "analyze r/programming for trending topics" --dry-run
+# 📌 Session ID: abc123-def456-789xyz
+
+# Stage 2: Content creation based on research
+npm run reddit -- "create a detailed post about the trending topics we found" --resume abc123-def456-789xyz
+
+# Stage 3: Refinement and optimization
+npm run reddit -- "optimize the post for better engagement" --resume abc123-def456-789xyz --dry-run
+```
+
+#### Cross-Session Learning
+```bash
+# Learn from successful campaigns
+npm run twitter -- "analyze the performance of recent tweets" --resume previous-session-id
+npm run twitter -- "apply those insights to create new content" --resume previous-session-id
+
+# Iterate on content strategy
+npm run linkedin -- "refine our B2B content approach based on engagement data" --resume strategy-session-id
 ```
 
 ## Contributing

@@ -13,6 +13,7 @@ import * as path from 'path';
 export interface SocialOptions {
   dryRun: boolean;
   verbose: boolean;
+  resume?: string;
 }
 
 export type MCPServersConfig = Record<string, McpServerConfig>;
@@ -100,7 +101,13 @@ export class SocialSDKExecutor {
   static async execute(platform: string, prompt: string, options: SocialOptions): Promise<void> {
     console.log(`🔮 Social SDK Executor - ${platform.toUpperCase()} Operations`);
     console.log('='.repeat(55));
-    console.log(`📝 Request: ${prompt}`);
+
+    if (options.resume) {
+      console.log(`📂 Resuming session: ${options.resume}`);
+    } else {
+      console.log(`📝 Request: ${prompt}`);
+    }
+
     console.log(`🎯 Platform: ${platform}`);
     console.log(`🔧 Mode: ${options.dryRun ? 'DRY RUN' : 'LIVE EXECUTION'}`);
     console.log('');
@@ -147,15 +154,26 @@ export class SocialSDKExecutor {
           // ],
           cwd: process.cwd(),
           // No maxTurns limit - let the model determine the workflow
+          ...(options.resume && { resume: options.resume })
         }
       });
 
       // Process streaming responses
       let messageCount = 0;
+      let sessionId: string | undefined;
       const startTime = Date.now();
 
       for await (const message of response) {
         messageCount++;
+
+        // Capture session ID from system init message
+        if (message.type === 'system' && (message as any).session_id && !sessionId) {
+          sessionId = (message as any).session_id;
+          console.log(`📌 Session ID: ${sessionId}`);
+          console.log(`💡 Resume with: npm run ${platform} -- --resume ${sessionId}`);
+          console.log('');
+        }
+
         await this.processMessage(message, options.verbose, messageCount);
       }
 

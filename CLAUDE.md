@@ -24,6 +24,7 @@ npm run lint           # ESLint code quality check
 npm run twitter -- "create viral content about TypeScript" --dry-run    # Generate content (preview mode)
 npm run twitter -- "find AWS discussions and engage thoughtfully"       # Search and engagement
 npm run twitter -- "analyze trending topics and create relevant content" --verbose  # Mixed operations
+npm run twitter -- "continue with follow-up thread" --resume <session-id>  # Resume previous session
 npm run twitter -- --help   # Show command help and examples
 ```
 
@@ -32,6 +33,7 @@ npm run twitter -- --help   # Show command help and examples
 npm run reddit -- "post insights about React in r/webdev" --dry-run     # Community posting (preview mode)
 npm run reddit -- "find JavaScript discussions to join with helpful comments"  # Community engagement
 npm run reddit -- "analyze popular programming posts for content ideas" --verbose  # Research and analysis
+npm run reddit -- "refine the post based on community feedback" --resume <session-id>  # Resume previous session
 npm run reddit -- --help    # Show command help and examples
 ```
 
@@ -40,6 +42,7 @@ npm run reddit -- --help    # Show command help and examples
 npm run linkedin -- "share cloud architecture best practices" --dry-run # Professional content (preview mode)
 npm run linkedin -- "connect with DevOps professionals in my industry"  # Professional networking
 npm run linkedin -- "create thought leadership content about AI trends" --verbose  # Industry leadership
+npm run linkedin -- "expand on the previous insights" --resume <session-id>  # Resume previous session
 npm run linkedin -- --help   # Show command help and examples
 ```
 
@@ -48,6 +51,7 @@ npm run linkedin -- --help   # Show command help and examples
 npm run social -- twitter "your prompt here" --dry-run   # Generic Twitter command
 npm run social -- reddit "your prompt here" --verbose    # Generic Reddit command
 npm run social -- linkedin "your prompt here"            # Generic LinkedIn command
+npm run social -- twitter "continue conversation" --resume <session-id>  # Resume with generic interface
 ```
 
 ### Testing Approach
@@ -55,6 +59,7 @@ npm run social -- linkedin "your prompt here"            # Generic LinkedIn comm
 - Natural language testing via `npm run [platform]` commands
 - Type checking via `npm run type-check`
 - Cross-platform testing with `npm run social [platform] "prompt"`
+- Session continuity testing with `--resume <session-id>` parameter
 
 ## Architecture Overview
 
@@ -92,6 +97,13 @@ await SocialSDKExecutor.execute(
   { dryRun: false, verbose: true }
 );
 
+// Resume previous Twitter session with new content
+await SocialSDKExecutor.execute(
+  'twitter',
+  "create a follow-up thread based on engagement",
+  { dryRun: false, verbose: true, resume: "77552924-a31c-4c1a-a07c-990855aa95a3" }
+);
+
 // Reddit operations - community engagement
 await SocialSDKExecutor.execute(
   'reddit',
@@ -115,6 +127,8 @@ const response = query({
   prompt: slashCommand,  // e.g., "/twitter create viral content --dry-run"
   options: {
     mcpServers: loadMCPServers(),
+    // Session management - resume previous conversation if provided
+    ...(options.resume && { resume: options.resume }),
     // Allow all MCP tools - permission system handles access control
     // If needed, can restrict to specific RUBE tools:
     // allowedTools: [
@@ -125,6 +139,9 @@ const response = query({
     cwd: process.cwd()
   }
 });
+
+// Session ID is captured from system messages during execution
+// Example: 📌 Session ID: 77552924-a31c-4c1a-a07c-990855aa95a3
 ```
 
 ### Configuration Validation
@@ -207,6 +224,8 @@ When debugging:
 4. Validate MCP server connectivity and permissions
 5. Use `npm run [platform] -- --help` for platform-specific command options
 6. Use `npm run social -- [platform] "prompt"` for generic command interface
+7. Review session transcripts in `~/.claude/projects/<project-name>/<session-id>.jsonl`
+8. Use `--resume <session-id>` to continue problematic sessions for iterative debugging
 
 ## Platform-Specific Features
 

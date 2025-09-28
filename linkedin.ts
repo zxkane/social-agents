@@ -22,24 +22,38 @@ import { SocialSDKExecutor, type SocialOptions } from './src/social-sdk-executor
 async function main() {
   const args = process.argv.slice(2);
 
+  // Parse resume session ID
+  const resumeIndex = args.indexOf('--resume');
+  const resume = resumeIndex > -1 && args[resumeIndex + 1]
+    ? args[resumeIndex + 1]
+    : undefined;
+
   // Parse command line options
   const options: SocialOptions = {
     dryRun: args.includes('--dry-run') || args.includes('--preview'),
-    verbose: args.includes('--verbose') || args.includes('-v')
+    verbose: args.includes('--verbose') || args.includes('-v'),
+    resume: resume
   };
 
   // Show help if requested or no arguments provided
-  if (args.includes('--help') || args.includes('-h') || args.length === 0) {
+  if (args.includes('--help') || args.includes('-h') || (args.length === 0 && !resume)) {
     showHelp();
     process.exit(0);
   }
 
-  // Extract the prompt (all non-flag arguments)
+  // Extract the prompt (all non-flag arguments and exclude resume session ID)
   const prompt = args
-    .filter(arg => !arg.startsWith('--') && arg !== '-v' && arg !== '-h')
+    .filter((arg, index) => {
+      // Exclude flags and their values
+      if (arg.startsWith('--') || arg === '-v' || arg === '-h') return false;
+      // Exclude resume session ID (argument after --resume)
+      if (resumeIndex > -1 && index === resumeIndex + 1) return false;
+      return true;
+    })
     .join(' ');
 
-  if (!prompt.trim()) {
+  // For resume operations, prompt is optional (will continue previous conversation)
+  if (!prompt.trim() && !resume) {
     console.error('❌ Error: No prompt provided\n');
     showHelp();
     process.exit(1);
@@ -94,6 +108,7 @@ EXAMPLES:
     npx tsx linkedin.ts "showcase our company's technical achievements"
 
 OPTIONS:
+  --resume <session-id>   Resume a previous session
   --dry-run, --preview    Preview actions without executing them
   --verbose, -v           Show detailed execution logs and debugging info
   --help, -h              Show this help message
