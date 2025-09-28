@@ -10,51 +10,58 @@
     "dev": "tsx src/index.ts",
     "lint": "eslint src/**/*.ts",
     "type-check": "tsc --noEmit",
-
     "twitter": "tsx twitter.ts",
     "generate": "tsx twitter.ts",
     "gen": "npm run twitter",
     "tweet": "npm run twitter",
     "engage": "tsx twitter.ts",
-
     "twitter:preview": "tsx twitter.ts --dry-run",
     "twitter:verbose": "tsx twitter.ts --verbose",
-
     "reddit": "tsx reddit.ts",
     "reddit:preview": "tsx reddit.ts --dry-run",
     "reddit:verbose": "tsx reddit.ts --verbose",
-
     "linkedin": "tsx linkedin.ts",
     "linkedin:preview": "tsx linkedin.ts --dry-run",
     "linkedin:verbose": "tsx linkedin.ts --verbose",
-
     "social": "tsx social.ts",
-
     "reddit:example": "tsx src/subagent-example.ts",
     "reddit:headless": "./headless-examples.sh",
     "reddit:simple": "./headless-examples.sh simple",
     "reddit:multi": "./headless-examples.sh multi",
     "reddit:optimize": "./headless-examples.sh optimize",
-
     "direct:reddit": "tsx examples/direct-mcp-reddit.ts",
     "direct:twitter": "tsx examples/direct-mcp-twitter.ts",
     "direct:bulk": "tsx examples/direct-mcp-bulk-operations.ts",
     "direct:analytics": "tsx examples/direct-mcp-analytics.ts"
   },
-  "keywords": ["reddit", "twitter", "linkedin", "social-media", "claude-code", "automation", "ai-agents", "viral-content", "engagement", "slash-commands", "mcp"],
+  "keywords": [
+    "reddit",
+    "twitter",
+    "linkedin",
+    "social-media",
+    "claude-code",
+    "automation",
+    "ai-agents",
+    "viral-content",
+    "engagement",
+    "slash-commands",
+    "mcp"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "zod": "^3.22.0",
+    "@anthropic-ai/claude-code": "^1.0.33",
+    "chalk": "^5.6.2",
     "dotenv": "^16.0.0",
-    "@anthropic-ai/claude-code": "^1.0.33"
+    "ora": "^9.0.0",
+    "zod": "^3.22.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "tsx": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0"
+    "eslint": "^8.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
   }
 }

@@ -11,6 +11,7 @@
  */
 
 import { SocialSDKExecutor, type SocialOptions } from './src/social-sdk-executor.js';
+import { logger } from './src/logger.js';
 
 /**
  * ★ Insight ─────────────────────────────────────
@@ -54,7 +55,8 @@ async function main() {
 
   // For resume operations, prompt is optional (will continue previous conversation)
   if (!prompt.trim() && !resume) {
-    console.error('❌ Error: No prompt provided\n');
+    logger.error('Error: No prompt provided');
+    logger.newline();
     showHelp();
     process.exit(1);
   }
@@ -62,9 +64,11 @@ async function main() {
   try {
     // Execute with the generic social executor using Twitter platform
     await SocialSDKExecutor.execute('twitter', prompt, options);
-    console.log('\n🎉 Twitter operation completed!');
+    logger.newline();
+    logger.success('Twitter operation completed!', '🎉');
   } catch (error) {
-    console.error(`\n❌ Operation failed: ${(error as Error).message}`);
+    logger.newline();
+    logger.error(`Operation failed: ${(error as Error).message}`);
     process.exit(1);
   }
 }
@@ -73,68 +77,64 @@ async function main() {
  * Display help information
  */
 function showHelp(): void {
-  console.log(`
-🐦 Twitter Command - AI-Driven Operations
-==========================================
+  logger.helpSection('🐦 Twitter Command - AI-Driven Operations', '');
+  logger.separator('=', 55);
 
-DESCRIPTION:
+  logger.helpSection('DESCRIPTION', `
   AI-powered Twitter automation that understands natural language requests.
   The AI will analyze your intent and execute appropriate Twitter operations
-  including content generation, engagement, trend analysis, and more.
+  including content generation, engagement, trend analysis, and more.`);
 
-USAGE:
-  npx tsx twitter.ts "<natural language request>" [options]
+  logger.helpSection('USAGE', `
+  npx tsx twitter.ts "<natural language request>" [options]`);
 
-EXAMPLES:
+  logger.helpSection('EXAMPLES', '');
+  logger.info('  Content Generation:', '');
+  logger.helpCommand('    npx tsx twitter.ts "write a viral thread about TypeScript"', '');
+  logger.helpCommand('    npx tsx twitter.ts "generate tweets about our product launch"', '');
+  logger.helpCommand('    npx tsx twitter.ts "create content about serverless architecture"', '');
 
-  Content Generation:
-    npx tsx twitter.ts "write a viral thread about TypeScript best practices"
-    npx tsx twitter.ts "generate tweets about our new product launch"
-    npx tsx twitter.ts "create engaging content about serverless architecture"
+  logger.info('  Engagement Operations:', '');
+  logger.helpCommand('    npx tsx twitter.ts "find and engage with AI discussions"', '');
+  logger.helpCommand('    npx tsx twitter.ts "search for AWS posts and like helpful ones"', '');
+  logger.helpCommand('    npx tsx twitter.ts "monitor brand mentions and respond"', '');
 
-  Engagement Operations:
-    npx tsx twitter.ts "find and engage with AI discussions"
-    npx tsx twitter.ts "search for AWS posts and like the helpful ones"
-    npx tsx twitter.ts "monitor mentions of our brand and respond appropriately"
+  logger.info('  Analysis & Strategy:', '');
+  logger.helpCommand('    npx tsx twitter.ts "analyze trending topics and create content"', '');
+  logger.helpCommand('    npx tsx twitter.ts "research what\'s popular in React community"', '');
+  logger.helpCommand('    npx tsx twitter.ts "find influential developers to connect with"', '');
 
-  Analysis & Strategy:
-    npx tsx twitter.ts "analyze trending topics in tech and create relevant content"
-    npx tsx twitter.ts "research what's popular in the React community"
-    npx tsx twitter.ts "find influential developers to connect with"
+  logger.helpSection('OPTIONS', '');
+  logger.helpCommand('  --resume <session-id>', 'Resume a previous session');
+  logger.helpCommand('  --dry-run, --preview', 'Preview actions without executing them');
+  logger.helpCommand('  --verbose, -v', 'Show detailed execution logs and debugging info');
+  logger.helpCommand('  --help, -h', 'Show this help message');
 
-  Mixed Operations:
-    npx tsx twitter.ts "look for TypeScript discussions and join with valuable insights"
-    npx tsx twitter.ts "create content based on what's trending in AI development"
+  logger.helpSection('FEATURES', '');
+  console.log('  ✨ Natural Language Understanding - No need to specify operation types');
+  console.log('  🤖 AI-Driven Workflows - The AI determines the best approach');
+  console.log('  🔄 Flexible Operations - Generation, engagement, analysis, and more');
+  console.log('  📊 Smart Analytics - Performance tracking and insights');
+  console.log('  🛡️  Safe Execution - Built-in rate limiting and account protection');
+  console.log('  🎯 Viral Optimization - Strategic content creation for maximum reach');
 
-OPTIONS:
-  --resume <session-id>   Resume a previous session
-  --dry-run, --preview    Preview actions without executing them
-  --verbose, -v           Show detailed execution logs and debugging info
-  --help, -h              Show this help message
+  logger.helpSection('SETUP', '');
+  console.log('  1. Create .env.local with your RUBE_API_TOKEN or COMPOSIO_API_KEY');
+  console.log('  2. Ensure .mcp.json is configured (already done in this project)');
+  console.log('  3. Verify .claude/commands/twitter.md exists');
+  console.log('  4. Run your first command!');
 
-FEATURES:
-  ✨ Natural Language Understanding - No need to specify operation types
-  🤖 AI-Driven Workflows - The AI determines the best approach
-  🔄 Flexible Operations - Generation, engagement, analysis, and more
-  📊 Smart Analytics - Performance tracking and insights
-  🛡️  Safe Execution - Built-in rate limiting and account protection
-  🎯 Viral Optimization - Strategic content creation for maximum reach
-
-SETUP:
-  1. Create .env.local with your RUBE_API_TOKEN or COMPOSIO_API_KEY
-  2. Ensure .mcp.json is configured (already done in this project)
-  3. Verify .claude/commands/twitter.md exists
-  4. Run your first command!
-
-The AI will understand your intent and execute the appropriate Twitter
-operations without requiring you to specify whether you want generation,
-engagement, or other types of operations.
-`);
+  logger.newline();
+  console.log('The AI will understand your intent and execute the appropriate Twitter');
+  console.log('operations without requiring you to specify operation types.');
 }
 
 // Execute if run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(console.error);
+  main().catch((error) => {
+    logger.error(`Unhandled error: ${error.message}`);
+    process.exit(1);
+  });
 }
 
 export default main;

@@ -11,6 +11,7 @@
  */
 
 import { SocialSDKExecutor, type SocialOptions } from './src/social-sdk-executor.js';
+import { logger } from './src/logger.js';
 
 /**
  * ★ Insight ─────────────────────────────────────
@@ -54,7 +55,8 @@ async function main() {
 
   // For resume operations, prompt is optional (will continue previous conversation)
   if (!prompt.trim() && !resume) {
-    console.error('❌ Error: No prompt provided\n');
+    logger.error('Error: No prompt provided');
+    logger.newline();
     showHelp();
     process.exit(1);
   }
@@ -62,9 +64,11 @@ async function main() {
   try {
     // Execute with the generic social executor using LinkedIn platform
     await SocialSDKExecutor.execute('linkedin', prompt, options);
-    console.log('\n🎉 LinkedIn operation completed!');
+    logger.newline();
+    logger.success('LinkedIn operation completed!', '🎉');
   } catch (error) {
-    console.error(`\n❌ Operation failed: ${(error as Error).message}`);
+    logger.newline();
+    logger.error(`Operation failed: ${(error as Error).message}`);
     process.exit(1);
   }
 }
@@ -73,68 +77,64 @@ async function main() {
  * Display help information for LinkedIn operations
  */
 function showHelp(): void {
-  console.log(`
-💼 LinkedIn Command - AI-Driven Professional Operations
-======================================================
+  logger.helpSection('💼 LinkedIn Command - AI-Driven Professional Operations', '');
+  logger.separator('=', 55);
 
-DESCRIPTION:
+  logger.helpSection('DESCRIPTION', `
   AI-powered LinkedIn automation that understands professional networking best practices.
   The AI will analyze your intent and execute appropriate LinkedIn operations
-  including content creation, networking, thought leadership, and B2B engagement.
+  including content creation, networking, thought leadership, and B2B engagement.`);
 
-USAGE:
-  npx tsx linkedin.ts "<natural language request>" [options]
+  logger.helpSection('USAGE', `
+  npx tsx linkedin.ts "<natural language request>" [options]`);
 
-EXAMPLES:
+  logger.helpSection('EXAMPLES', '');
+  logger.info('  Content Creation & Thought Leadership:', '');
+  logger.helpCommand('    npx tsx linkedin.ts "share cloud architecture best practices"', '');
+  logger.helpCommand('    npx tsx linkedin.ts "create thought leadership content about AI"', '');
+  logger.helpCommand('    npx tsx linkedin.ts "post insights about remote team management"', '');
 
-  Content Creation & Thought Leadership:
-    npx tsx linkedin.ts "share cloud architecture best practices"
-    npx tsx linkedin.ts "create thought leadership content about AI trends"
-    npx tsx linkedin.ts "post insights about remote team management"
+  logger.info('  Professional Networking:', '');
+  logger.helpCommand('    npx tsx linkedin.ts "connect with DevOps professionals"', '');
+  logger.helpCommand('    npx tsx linkedin.ts "engage with CTO discussions in network"', '');
+  logger.helpCommand('    npx tsx linkedin.ts "build relationships with startup founders"', '');
 
-  Professional Networking:
-    npx tsx linkedin.ts "connect with DevOps professionals in my industry"
-    npx tsx linkedin.ts "engage with CTO discussions in my network"
-    npx tsx linkedin.ts "build relationships with startup founders"
+  logger.info('  Industry Engagement:', '');
+  logger.helpCommand('    npx tsx linkedin.ts "participate in software architecture discussions"', '');
+  logger.helpCommand('    npx tsx linkedin.ts "share expertise on AWS and cloud technologies"', '');
+  logger.helpCommand('    npx tsx linkedin.ts "comment thoughtfully on industry posts"', '');
 
-  Industry Engagement:
-    npx tsx linkedin.ts "participate in discussions about software architecture"
-    npx tsx linkedin.ts "share expertise on AWS and cloud technologies"
-    npx tsx linkedin.ts "comment thoughtfully on industry leader posts"
+  logger.helpSection('OPTIONS', '');
+  logger.helpCommand('  --resume <session-id>', 'Resume a previous session');
+  logger.helpCommand('  --dry-run, --preview', 'Preview actions without executing them');
+  logger.helpCommand('  --verbose, -v', 'Show detailed execution logs and debugging info');
+  logger.helpCommand('  --help, -h', 'Show this help message');
 
-  Business Development:
-    npx tsx linkedin.ts "establish thought leadership in the fintech space"
-    npx tsx linkedin.ts "network with potential clients in enterprise software"
-    npx tsx linkedin.ts "showcase our company's technical achievements"
+  logger.helpSection('LINKEDIN-SPECIFIC FEATURES', '');
+  console.log('  💼 Professional Tone - Maintains appropriate business communication standards');
+  console.log('  🎯 B2B Targeting - Focuses on business decision makers and industry leaders');
+  console.log('  📈 Authority Building - Establishes expertise through valuable insights');
+  console.log('  🤝 Strategic Networking - Builds authentic professional relationships');
+  console.log('  📊 Industry Analysis - Provides timely insights on business trends');
+  console.log('  🏆 Thought Leadership - Positions you as an industry expert');
 
-OPTIONS:
-  --resume <session-id>   Resume a previous session
-  --dry-run, --preview    Preview actions without executing them
-  --verbose, -v           Show detailed execution logs and debugging info
-  --help, -h              Show this help message
+  logger.helpSection('SETUP', '');
+  console.log('  1. Create .env.local with your RUBE_API_TOKEN or COMPOSIO_API_KEY');
+  console.log('  2. Ensure .mcp.json is configured (already done in this project)');
+  console.log('  3. Verify .claude/commands/linkedin.md exists');
+  console.log('  4. Run your first command!');
 
-LINKEDIN-SPECIFIC FEATURES:
-  💼 Professional Tone - Maintains appropriate business communication standards
-  🎯 B2B Targeting - Focuses on business decision makers and industry leaders
-  📈 Authority Building - Establishes expertise through valuable insights
-  🤝 Strategic Networking - Builds authentic professional relationships
-  📊 Industry Analysis - Provides timely insights on business trends
-  🏆 Thought Leadership - Positions you as an industry expert
-
-SETUP:
-  1. Create .env.local with your RUBE_API_TOKEN or COMPOSIO_API_KEY
-  2. Ensure .mcp.json is configured (already done in this project)
-  3. Verify .claude/commands/linkedin.md exists
-  4. Run your first command!
-
-The AI will understand your intent and execute LinkedIn-appropriate operations
-using professional networking best practices and B2B engagement strategies.
-`);
+  logger.newline();
+  console.log('The AI will understand your intent and execute LinkedIn-appropriate operations');
+  console.log('using professional networking best practices and B2B engagement strategies.');
 }
 
 // Execute if run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(console.error);
+  main().catch((error) => {
+    logger.error(`Unhandled error: ${error.message}`);
+    process.exit(1);
+  });
 }
 
 export default main;

@@ -11,6 +11,7 @@
  */
 
 import { SocialSDKExecutor, type SocialOptions } from './src/social-sdk-executor.js';
+import { logger } from './src/logger.js';
 
 /**
  * ★ Insight ─────────────────────────────────────
@@ -50,7 +51,8 @@ async function main() {
   });
 
   if (!platform) {
-    console.error('❌ Error: No platform specified\n');
+    logger.error('Error: No platform specified');
+    logger.newline();
     showHelp();
     process.exit(1);
   }
@@ -70,7 +72,8 @@ async function main() {
 
   // For resume operations, prompt is optional (will continue previous conversation)
   if (!prompt.trim() && !resume) {
-    console.error('❌ Error: No prompt provided\n');
+    logger.error('Error: No prompt provided');
+    logger.newline();
     showHelp();
     process.exit(1);
   }
@@ -78,9 +81,11 @@ async function main() {
   try {
     // Execute with the generic social executor
     await SocialSDKExecutor.execute(platform, prompt, options);
-    console.log(`\n🎉 ${platform.charAt(0).toUpperCase() + platform.slice(1)} operation completed!`);
+    logger.newline();
+    logger.success(`${platform.charAt(0).toUpperCase() + platform.slice(1)} operation completed!`, '🎉');
   } catch (error) {
-    console.error(`\n❌ Operation failed: ${(error as Error).message}`);
+    logger.newline();
+    logger.error(`Operation failed: ${(error as Error).message}`);
     process.exit(1);
   }
 }
@@ -89,6 +94,9 @@ async function main() {
  * Display help information for all platforms
  */
 function showHelp(): void {
+  logger.helpSection('🌐 Generic Social Command - AI-Driven Operations', '');
+  logger.separator('=', 55);
+
   console.log(`
 🔮 Social Media Command - AI-Driven Operations
 ==============================================
@@ -168,7 +176,10 @@ using each platform's unique best practices and optimization strategies.
 
 // Execute if run directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  main().catch(console.error);
+  main().catch((error) => {
+    logger.error(`Unhandled error: ${error.message}`);
+    process.exit(1);
+  });
 }
 
 export default main;

@@ -7,6 +7,7 @@
 
 import { query, type SDKMessage, type SDKSystemMessage, type SDKAssistantMessage, type SDKResultMessage, type McpServerConfig } from '@anthropic-ai/claude-code';
 import { loadEnvironment, expandEnvironmentVariables } from './env-loader.js';
+import { logger } from './logger.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -34,7 +35,7 @@ export class SocialSDKExecutor {
     const mcpPath = path.join(process.cwd(), '.mcp.json');
 
     if (!fs.existsSync(mcpPath)) {
-      console.warn('⚠️  .mcp.json not found, using empty MCP configuration');
+      logger.warning('.mcp.json not found, using empty MCP configuration');
       return {};
     }
 
@@ -47,13 +48,13 @@ export class SocialSDKExecutor {
       const config = JSON.parse(expandedContent);
 
       if (config.mcpServers) {
-        console.log(`🔌 Loaded ${Object.keys(config.mcpServers).length} MCP server(s)`);
+        logger.loadedServers(Object.keys(config.mcpServers).length);
         return config.mcpServers;
       }
 
       return {};
     } catch (error) {
-      console.error(`❌ Failed to load .mcp.json: ${(error as Error).message}`);
+      logger.error(`Failed to load .mcp.json: ${(error as Error).message}`);
       return {};
     }
   }
@@ -69,12 +70,12 @@ export class SocialSDKExecutor {
     const supportedPlatforms = ['twitter', 'reddit', 'linkedin'];
 
     if (!supportedPlatforms.includes(platform.toLowerCase())) {
-      console.error(`❌ Unsupported platform: ${platform}`);
-      console.error(`Supported platforms: ${supportedPlatforms.join(', ')}`);
-      console.error('');
-      console.error('To add a new platform:');
-      console.error(`1. Create .claude/commands/${platform}.md with platform-specific prompts`);
-      console.error(`2. Add "${platform}": "tsx social.ts ${platform}" to package.json scripts`);
+      logger.error(`Unsupported platform: ${platform}`);
+      logger.error(`Supported platforms: ${supportedPlatforms.join(', ')}`);
+      logger.newline();
+      logger.error('To add a new platform:');
+      logger.error(`1. Create .claude/commands/${platform}.md with platform-specific prompts`);
+      logger.error(`2. Add "${platform}": "tsx social.ts ${platform}" to package.json scripts`);
       process.exit(1);
     }
   }
@@ -99,18 +100,20 @@ export class SocialSDKExecutor {
    * Main execution method for social media operations
    */
   static async execute(platform: string, prompt: string, options: SocialOptions): Promise<void> {
-    console.log(`🔮 Social SDK Executor - ${platform.toUpperCase()} Operations`);
-    console.log('='.repeat(55));
+    // Set logger verbose mode
+    logger.setVerbose(options.verbose);
+
+    logger.header(`Social SDK Executor - ${platform.toUpperCase()} Operations`);
 
     if (options.resume) {
-      console.log(`📂 Resuming session: ${options.resume}`);
+      logger.resuming(options.resume);
     } else {
-      console.log(`📝 Request: ${prompt}`);
+      logger.prompt(prompt);
     }
 
-    console.log(`🎯 Platform: ${platform}`);
-    console.log(`🔧 Mode: ${options.dryRun ? 'DRY RUN' : 'LIVE EXECUTION'}`);
-    console.log('');
+    logger.platform(platform);
+    logger.mode(options.dryRun);
+    logger.newline();
 
     // Validate platform support
     this.validatePlatform(platform);
@@ -118,8 +121,8 @@ export class SocialSDKExecutor {
     // Check if slash command file exists
     const commandPath = path.join(process.cwd(), '.claude', 'commands', `${platform}.md`);
     if (!fs.existsSync(commandPath)) {
-      console.error(`❌ Slash command file not found: ${commandPath}`);
-      console.error(`Please create .claude/commands/${platform}.md with platform-specific prompts`);
+      logger.error(`Slash command file not found: ${commandPath}`);
+      logger.error(`Please create .claude/commands/${platform}.md with platform-specific prompts`);
       process.exit(1);
     }
 
@@ -129,14 +132,14 @@ export class SocialSDKExecutor {
       const slashCommand = this.buildSlashCommand(platform, prompt, options);
 
       if (options.verbose) {
-        console.log('🔍 Debug Information:');
-        console.log(`MCP Servers: ${Object.keys(mcpServers).join(', ')}`);
-        console.log(`Slash Command: ${slashCommand}`);
-        console.log(`Command File: ${commandPath}`);
-        console.log('─'.repeat(40));
+        logger.debug('Debug Information:');
+        logger.debug(`MCP Servers: ${Object.keys(mcpServers).join(', ')}`);
+        logger.debug(`Slash Command: ${slashCommand}`);
+        logger.debug(`Command File: ${commandPath}`);
+        logger.separator();
       }
 
-      console.log(`🚀 Initializing AI-driven ${platform} operations...\n`);
+      logger.initializing(platform);
 
       // Execute using Claude Code SDK with slash command
       const response = query({
@@ -169,35 +172,31 @@ export class SocialSDKExecutor {
         // Capture session ID from system init message
         if (message.type === 'system' && (message as any).session_id && !sessionId) {
           sessionId = (message as any).session_id;
-          console.log(`📌 Session ID: ${sessionId}`);
-          console.log(`💡 Resume with: npm run ${platform} -- --resume ${sessionId}`);
-          console.log('');
+          if (sessionId) {
+            logger.session(sessionId, platform);
+            logger.newline();
+          }
         }
 
         await this.processMessage(message, options.verbose, messageCount);
       }
 
       const duration = Date.now() - startTime;
-      console.log(`\n⏱️  Total execution time: ${duration}ms`);
-      console.log(`📊 Processed ${messageCount} messages`);
+      logger.newline();
+      logger.stats(duration, messageCount);
 
     } catch (error) {
-      console.error('\n❌ Execution failed:');
-      console.error((error as Error).message);
+      logger.newline();
+      logger.error('Execution failed:');
+      logger.error((error as Error).message);
 
       if (options.verbose) {
-        console.error('\n🔍 Full error details:');
-        console.error(error);
+        logger.newline();
+        logger.debug('Full error details:');
+        logger.debug(error as any);
       }
 
-      console.log('\n💡 Troubleshooting tips:');
-      console.log('- If prompted for RUBE tool access, grant permission to enable social media operations');
-      console.log('- Check your .env.local file has RUBE_API_TOKEN or COMPOSIO_API_KEY');
-      console.log('- Verify .mcp.json configuration is valid');
-      console.log('- Try running with --verbose for more details');
-      console.log(`- Ensure .claude/commands/${platform}.md exists and is properly formatted`);
-      console.log('- The system can provide strategic guidance even without direct tool access');
-
+      logger.troubleshooting(platform);
       process.exit(1);
     }
   }
@@ -220,14 +219,14 @@ export class SocialSDKExecutor {
         if (verbose) {
           const sysMsg = message as SDKSystemMessage;
           if ('model' in sysMsg) {
-            console.log(`🔧 System [${messageNumber}]: Initialized with model ${sysMsg.model}`);
+            logger.system(`System [${messageNumber}]: Initialized with model ${sysMsg.model}`);
           }
 
           if ('mcp_servers' in sysMsg && sysMsg.mcp_servers && sysMsg.mcp_servers.length > 0) {
             const serverStatus = sysMsg.mcp_servers
               .map((s: { name: string; status: string }) => `${s.name}(${s.status})`)
               .join(', ');
-            console.log(`🔌 MCP Servers: ${serverStatus}`);
+            logger.mcpServers([serverStatus]);
           }
         }
         break;
@@ -250,12 +249,12 @@ export class SocialSDKExecutor {
 
           if (content.trim()) {
             if (verbose) {
-              console.log(`🤖 Assistant [${messageNumber}]:`);
+              logger.debug(`Assistant [${messageNumber}]:`, '🤖');
             }
             console.log(content);
 
             if (verbose) {
-              console.log('─'.repeat(40));
+              logger.separator();
             }
           }
         }
@@ -263,36 +262,40 @@ export class SocialSDKExecutor {
 
       case 'user':
         if (verbose) {
-          console.log(`👤 User [${messageNumber}]: Input processed`);
+          logger.debug(`User [${messageNumber}]: Input processed`, '👤');
         }
         break;
 
       case 'result':
         const resultMsg = message as SDKResultMessage;
-        console.log(`\n🎯 Execution Result [${messageNumber}]:`);
+        logger.newline();
+        logger.info(`Execution Result [${messageNumber}]:`, '🎯');
 
         if (resultMsg.subtype === 'success') {
-          console.log('✅ Operation completed successfully!');
+          logger.success('Operation completed successfully!');
 
           if ('result' in resultMsg) {
-            console.log('\n📋 Final Output:');
+            logger.newline();
+            logger.info('Final Output:', '📋');
             console.log(resultMsg.result);
           }
         } else {
-          console.log(`❌ Operation failed: ${resultMsg.subtype}`);
+          logger.error(`Operation failed: ${resultMsg.subtype}`);
         }
 
         if (verbose && 'usage' in resultMsg) {
-          console.log(`\n📊 Usage Statistics:`);
-          console.log(`💰 Cost: $${resultMsg.total_cost_usd}`);
-          console.log(`📈 Tokens: ${resultMsg.usage.input_tokens} input, ${resultMsg.usage.output_tokens} output`);
-          console.log(`🔄 Turns: ${resultMsg.num_turns}`);
+          logger.usage(
+            resultMsg.total_cost_usd,
+            resultMsg.usage.input_tokens,
+            resultMsg.usage.output_tokens,
+            resultMsg.num_turns
+          );
         }
         break;
 
       default:
         if (verbose) {
-          console.log(`ℹ️  Unknown message [${messageNumber}]: ${(message as any).type}`);
+          logger.debug(`Unknown message [${messageNumber}]: ${(message as any).type}`, 'ℹ️');
         }
     }
   }
