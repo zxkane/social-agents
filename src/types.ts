@@ -520,3 +520,281 @@ export interface TwitterDeleteResponse {
   deletedTweetId?: string;
   error?: string;
 }
+
+// YouTube video configuration schema
+export const YouTubeVideoConfigSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(100, 'Title too long'),
+  description: z.string().optional(),
+  tags: z.array(z.string()).max(500, 'Too many tags').optional(),
+  categoryId: z.string().optional(),
+  privacyStatus: z.enum(['public', 'unlisted', 'private']).default('public'),
+  scheduledStartTime: z.date().optional(),
+  thumbnail: z.string().url().optional(),
+  language: z.string().optional(),
+  caption: z.boolean().default(false),
+  selfDeclaredMadeForKids: z.boolean().optional(),
+  embeddable: z.boolean().default(true),
+  publicStatsViewable: z.boolean().default(true),
+});
+
+export interface YouTubeVideoConfig {
+  title: string;
+  description?: string;
+  tags?: string[];
+  categoryId?: string;
+  privacyStatus?: 'public' | 'unlisted' | 'private';
+  scheduledStartTime?: Date;
+  thumbnail?: string;
+  language?: string;
+  caption?: boolean;
+  selfDeclaredMadeForKids?: boolean;
+  embeddable?: boolean;
+  publicStatsViewable?: boolean;
+}
+
+// YouTube Shorts configuration
+export const YouTubeShortsConfigSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(60, 'Shorts title too long'),
+  description: z.string().max(5000).optional(),
+  hashtags: z.array(z.string()).max(30, 'Too many hashtags').optional(),
+  privacyStatus: z.enum(['public', 'unlisted', 'private']).default('public'),
+  scheduledStartTime: z.date().optional(),
+  selfDeclaredMadeForKids: z.boolean().optional(),
+});
+
+export interface YouTubeShortsConfig {
+  title: string;
+  description?: string;
+  hashtags?: string[];
+  privacyStatus?: 'public' | 'unlisted' | 'private';
+  scheduledStartTime?: Date;
+  selfDeclaredMadeForKids?: boolean;
+}
+
+// YouTube playlist configuration
+export const YouTubePlaylistConfigSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(150, 'Title too long'),
+  description: z.string().max(5000).optional(),
+  privacyStatus: z.enum(['public', 'unlisted', 'private']).default('public'),
+  tags: z.array(z.string()).optional(),
+  defaultLanguage: z.string().optional(),
+});
+
+export interface YouTubePlaylistConfig {
+  title: string;
+  description?: string;
+  privacyStatus?: 'public' | 'unlisted' | 'private';
+  tags?: string[];
+  defaultLanguage?: string;
+}
+
+// YouTube SEO optimization configuration
+export const YouTubeSEOConfigSchema = z.object({
+  primaryKeyword: z.string().min(1, 'Primary keyword is required'),
+  secondaryKeywords: z.array(z.string()).max(10).optional(),
+  targetAudience: z.enum(['kids', 'teens', 'adults', 'seniors', 'all']).default('all'),
+  contentType: z.enum(['educational', 'entertainment', 'tutorial', 'review', 'vlog', 'gaming', 'music', 'comedy', 'other']),
+  videoDuration: z.enum(['short', 'medium', 'long']).optional(), // <5min, 5-20min, >20min
+  competitorAnalysis: z.boolean().default(false),
+  trendingTopics: z.boolean().default(true),
+  optimalTiming: z.boolean().default(true),
+});
+
+export interface YouTubeSEOConfig {
+  primaryKeyword: string;
+  secondaryKeywords?: string[];
+  targetAudience?: 'kids' | 'teens' | 'adults' | 'seniors' | 'all';
+  contentType: 'educational' | 'entertainment' | 'tutorial' | 'review' | 'vlog' | 'gaming' | 'music' | 'comedy' | 'other';
+  videoDuration?: 'short' | 'medium' | 'long';
+  competitorAnalysis?: boolean;
+  trendingTopics?: boolean;
+  optimalTiming?: boolean;
+}
+
+// YouTube analytics configuration
+export const YouTubeAnalyticsConfigSchema = z.object({
+  videoId: z.string().optional(),
+  channelId: z.string().optional(),
+  metrics: z.array(z.enum(['views', 'watchTime', 'subscribers', 'likes', 'comments', 'shares', 'impressions', 'clickThroughRate'])).min(1),
+  timeframe: z.object({
+    start: z.date(),
+    end: z.date(),
+  }),
+  breakdown: z.array(z.enum(['day', 'week', 'month', 'country', 'ageGroup', 'gender', 'trafficSource', 'device'])).optional(),
+  exportFormat: z.enum(['json', 'csv', 'excel']).default('json'),
+});
+
+export interface YouTubeAnalyticsConfig {
+  videoId?: string;
+  channelId?: string;
+  metrics: Array<'views' | 'watchTime' | 'subscribers' | 'likes' | 'comments' | 'shares' | 'impressions' | 'clickThroughRate'>;
+  timeframe: {
+    start: Date;
+    end: Date;
+  };
+  breakdown?: Array<'day' | 'week' | 'month' | 'country' | 'ageGroup' | 'gender' | 'trafficSource' | 'device'>;
+  exportFormat?: 'json' | 'csv' | 'excel';
+}
+
+// YouTube video details
+export interface YouTubeVideoDetails {
+  id: string;
+  title: string;
+  description: string;
+  channelId: string;
+  channelTitle: string;
+  publishedAt: Date;
+  duration: string; // ISO 8601 format
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  tags?: string[];
+  categoryId: string;
+  defaultLanguage?: string;
+  thumbnails: {
+    default?: { url: string; width: number; height: number };
+    medium?: { url: string; width: number; height: number };
+    high?: { url: string; width: number; height: number };
+    standard?: { url: string; width: number; height: number };
+    maxres?: { url: string; width: number; height: number };
+  };
+  privacyStatus: 'public' | 'unlisted' | 'private';
+  embeddable: boolean;
+  publicStatsViewable: boolean;
+}
+
+// YouTube channel details
+export interface YouTubeChannelDetails {
+  id: string;
+  title: string;
+  description: string;
+  customUrl?: string;
+  publishedAt: Date;
+  subscriberCount: number;
+  videoCount: number;
+  viewCount: number;
+  thumbnails: {
+    default?: { url: string; width: number; height: number };
+    medium?: { url: string; width: number; height: number };
+    high?: { url: string; width: number; height: number };
+  };
+  country?: string;
+  defaultLanguage?: string;
+  keywords?: string;
+}
+
+// YouTube search configuration
+export const YouTubeSearchConfigSchema = z.object({
+  query: z.string().min(1, 'Search query is required'),
+  maxResults: z.number().min(1).max(50).default(25),
+  order: z.enum(['date', 'rating', 'relevance', 'title', 'viewCount']).default('relevance'),
+  publishedAfter: z.date().optional(),
+  publishedBefore: z.date().optional(),
+  videoDuration: z.enum(['any', 'short', 'medium', 'long']).default('any'),
+  videoDefinition: z.enum(['any', 'high', 'standard']).default('any'),
+  videoCaption: z.enum(['any', 'closedCaption', 'none']).default('any'),
+  regionCode: z.string().optional(),
+  relevanceLanguage: z.string().optional(),
+  safeSearch: z.enum(['moderate', 'none', 'strict']).default('moderate'),
+  channelId: z.string().optional(),
+  type: z.enum(['video', 'channel', 'playlist']).default('video'),
+});
+
+export interface YouTubeSearchConfig {
+  query: string;
+  maxResults?: number;
+  order?: 'date' | 'rating' | 'relevance' | 'title' | 'viewCount';
+  publishedAfter?: Date;
+  publishedBefore?: Date;
+  videoDuration?: 'any' | 'short' | 'medium' | 'long';
+  videoDefinition?: 'any' | 'high' | 'standard';
+  videoCaption?: 'any' | 'closedCaption' | 'none';
+  regionCode?: string;
+  relevanceLanguage?: string;
+  safeSearch?: 'moderate' | 'none' | 'strict';
+  channelId?: string;
+  type?: 'video' | 'channel' | 'playlist';
+}
+
+// YouTube search results
+export interface YouTubeSearchResults {
+  videos?: YouTubeVideoDetails[];
+  channels?: YouTubeChannelDetails[];
+  playlists?: Array<{
+    id: string;
+    title: string;
+    description: string;
+    channelId: string;
+    channelTitle: string;
+    publishedAt: Date;
+    thumbnails: Record<string, { url: string; width: number; height: number }>;
+  }>;
+  nextPageToken?: string;
+  prevPageToken?: string;
+  pageInfo: {
+    totalResults: number;
+    resultsPerPage: number;
+  };
+  searchQuery: string;
+}
+
+// YouTube operation results
+export interface YouTubeUploadResult {
+  success: boolean;
+  videoId?: string;
+  url?: string;
+  error?: string;
+  processingStatus?: 'processing' | 'succeeded' | 'failed' | 'terminated';
+  uploadStatus?: 'uploaded' | 'processed' | 'failed' | 'rejected';
+}
+
+export interface YouTubePlaylistResult {
+  success: boolean;
+  playlistId?: string;
+  url?: string;
+  error?: string;
+  videoCount?: number;
+}
+
+export interface YouTubeAnalyticsResult {
+  success: boolean;
+  data?: {
+    totalViews: number;
+    totalWatchTime: number; // in seconds
+    totalSubscribers: number;
+    averageViewDuration: number; // in seconds
+    clickThroughRate: number; // percentage
+    topVideos: YouTubeVideoDetails[];
+    audienceRetention: Array<{ timePoint: number; percentage: number }>;
+    trafficSources: Record<string, number>;
+    demographics: {
+      ageGroups: Record<string, number>;
+      genders: Record<string, number>;
+      countries: Record<string, number>;
+    };
+  };
+  error?: string;
+  generatedAt: Date;
+}
+
+// MCP Response Types for YouTube operations
+export interface YouTubeSearchResponse {
+  success: boolean;
+  data?: YouTubeSearchResults;
+  error?: string;
+  rateLimitRemaining?: number;
+}
+
+export interface YouTubeVideoResponse {
+  success: boolean;
+  data?: YouTubeVideoDetails;
+  error?: string;
+  rateLimitRemaining?: number;
+}
+
+export interface YouTubeChannelResponse {
+  success: boolean;
+  data?: YouTubeChannelDetails;
+  error?: string;
+  rateLimitRemaining?: number;
+}

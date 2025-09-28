@@ -23,7 +23,7 @@ export type MCPServersConfig = Record<string, McpServerConfig>;
  * ★ Insight ─────────────────────────────────────
  * Generic social executor works with any platform through slash commands
  * Platform-specific logic is handled by .claude/commands/*.md files
- * Single codebase handles Twitter, Reddit, LinkedIn, and future platforms
+ * Single codebase handles Twitter, Reddit, LinkedIn, YouTube, and future platforms
  * ─────────────────────────────────────────────────
  */
 export class SocialSDKExecutor {
@@ -67,7 +67,7 @@ export class SocialSDKExecutor {
    * ─────────────────────────────────────────────────
    */
   private static validatePlatform(platform: string): void {
-    const supportedPlatforms = ['twitter', 'reddit', 'linkedin'];
+    const supportedPlatforms = ['twitter', 'reddit', 'linkedin', 'youtube'];
 
     if (!supportedPlatforms.includes(platform.toLowerCase())) {
       logger.error(`Unsupported platform: ${platform}`);
