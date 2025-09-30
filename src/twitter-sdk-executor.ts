@@ -2,10 +2,10 @@
 
 /**
  * Twitter SDK Executor - Direct MCP Integration
- * Uses Claude Code SDK with system prompts instead of subagent delegation
+ * Uses Claude Agent SDK with system prompts instead of subagent delegation
  */
 
-import { query, type SDKMessage, type SDKSystemMessage, type SDKAssistantMessage, type SDKResultMessage, type McpServerConfig } from '@anthropic-ai/claude-code';
+import { query, type SDKMessage, type SDKSystemMessage, type SDKAssistantMessage, type SDKResultMessage, type McpServerConfig } from '@anthropic-ai/claude-agent-sdk';
 import { loadEnvironment, expandEnvironmentVariables, validateTwitterEnvironment } from './env-loader.js';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -151,11 +151,11 @@ Focus on delivering exceptional value whether through direct tool execution or s
 
       console.log('🚀 Initializing AI-driven Twitter operations...\n');
 
-      // Execute using Claude Code SDK with direct MCP integration
+      // Execute using Claude Agent SDK with direct MCP integration
       const response = query({
         prompt: prompt,
         options: {
-          appendSystemPrompt: systemPrompt,
+          systemPrompt: systemPrompt,
           mcpServers: mcpServers,
           allowedTools: [
             'RUBE_SEARCH_TOOLS',

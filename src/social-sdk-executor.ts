@@ -2,10 +2,10 @@
 
 /**
  * Social SDK Executor - Generic MCP Integration
- * Uses Claude Code SDK with slash commands for platform-specific operations
+ * Uses Claude Agent SDK with slash commands for platform-specific operations
  */
 
-import { query, type SDKMessage, type SDKSystemMessage, type SDKAssistantMessage, type SDKResultMessage, type McpServerConfig } from '@anthropic-ai/claude-code';
+import { query, type SDKMessage, type SDKSystemMessage, type SDKAssistantMessage, type SDKResultMessage, type McpServerConfig } from '@anthropic-ai/claude-agent-sdk';
 import { loadEnvironment, expandEnvironmentVariables } from './env-loader.js';
 import { logger } from './logger.js';
 import * as fs from 'fs';
@@ -141,10 +141,13 @@ export class SocialSDKExecutor {
 
       logger.initializing(platform);
 
-      // Execute using Claude Code SDK with slash command
+      // Execute using Claude Agent SDK with slash command
       const response = query({
         prompt: slashCommand,
         options: {
+          // Load settings for slash commands and Claude Code behavior
+          settingSources: ['project', 'local'],
+          systemPrompt: { type: 'preset', preset: 'claude_code' },
           mcpServers: mcpServers,
           // Allow all MCP tools - permission system will handle access control
           // If needed, can restrict to specific RUBE tools:
